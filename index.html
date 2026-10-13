@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#7657f6">
+<title>Punctuation Power!</title>
+<style>
+  :root{
+    --purple:#7657f6; --pink:#ff6fae; --yellow:#ffd95a; --mint:#72e6c1;
+    --blue:#68c9ff; --ink:#29304d; --paper:#fffdf8; --green:#138a5b; --red:#c43d58;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; font-family: "Trebuchet MS", Arial, sans-serif; color:var(--ink);
+    background:radial-gradient(circle at 10% 10%,#ffe5f1 0,transparent 25%),
+               radial-gradient(circle at 90% 20%,#dff6ff 0,transparent 27%),
+               linear-gradient(135deg,#fff7d8,#f1eaff 55%,#e2fff5);
+    padding:18px;
+  }
+  .wrap{width:min(760px,100%);margin:0 auto}
+  header{text-align:center;margin:8px 0 18px}
+  .logo{display:inline-flex;align-items:center;justify-content:center;width:74px;height:74px;border-radius:24px;
+    background:var(--yellow);font-size:38px;box-shadow:0 6px 0 #eabf3c;transform:rotate(-4deg)}
+  h1{font-size:clamp(2rem,7vw,3.2rem);line-height:1.05;margin:16px 0 8px;color:var(--purple);letter-spacing:-1px}
+  .subtitle{margin:0 auto;max-width:520px;font-size:1.05rem;line-height:1.5}
+  .chips{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:15px 0}
+  .chip{padding:7px 12px;border-radius:999px;font-weight:800;font-size:.88rem}
+  .chip:nth-child(1){background:#ffe0ee}.chip:nth-child(2){background:#fff0b8}.chip:nth-child(3){background:#d7f8ed}.chip:nth-child(4){background:#dff2ff}
+  .card{background:rgba(255,255,255,.94);border:3px solid white;border-radius:26px;padding:clamp(18px,4vw,30px);box-shadow:0 12px 30px #51428a18}
+  .fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+  label{display:block;font-weight:800;font-size:.95rem;margin-bottom:7px}
+  input{width:100%;border:2px solid #e4defd;border-radius:14px;padding:14px;font:inherit;font-size:1rem;min-width:0;background:#fff}
+  input:focus,button:focus-visible{outline:3px solid #ffbd45;outline-offset:3px}
+  button{font:inherit;font-weight:800;cursor:pointer;border:0;border-radius:15px;padding:14px 18px;min-height:50px;transition:transform .12s,filter .12s}
+  button:active{transform:scale(.98)}
+  .primary{background:var(--purple);color:white;box-shadow:0 5px 0 #5436cf}
+  .primary:hover{filter:brightness(1.06)}
+  .full{width:100%}
+  .hidden{display:none!important}
+  .topline{display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:800;margin-bottom:12px}
+  .pill{background:#fff0b8;padding:8px 12px;border-radius:999px;white-space:nowrap}
+  .progress{height:12px;background:#eee9ff;border-radius:999px;overflow:hidden;margin-bottom:24px}
+  .progress span{height:100%;display:block;width:0;background:linear-gradient(90deg,var(--pink),var(--purple),var(--blue));border-radius:999px;transition:width .25s}
+  .q-label{font-size:.9rem;color:#766b9c;font-weight:900;text-transform:uppercase;letter-spacing:1px}
+  .question{font-size:clamp(1.35rem,5vw,2rem);line-height:1.35;margin:12px 0 20px}
+  .sentence{background:#fff7d8;border:2px dashed #f3c947;border-radius:18px;padding:18px;text-align:center;font-size:clamp(1.2rem,4.5vw,1.7rem);font-weight:900;line-height:1.5;margin:16px 0 22px;overflow-wrap:anywhere}
+  .options{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .option{background:#f2efff;border:2px solid #e2dcff;color:var(--ink);text-align:left;display:flex;align-items:center;gap:10px;line-height:1.35}
+  .option:nth-child(2){background:#fff0f6;border-color:#ffd5e6}
+  .option:nth-child(3){background:#e8fbf4;border-color:#c4f1df}
+  .option:nth-child(4){background:#eaf7ff;border-color:#ccecff}
+  .letter{flex:0 0 32px;height:32px;border-radius:10px;background:#fff;display:grid;place-items:center;font-weight:900}
+  .option:disabled{cursor:default;opacity:1}
+  .option.correct{border-color:#21ad79;background:#dff9ed}
+  .option.wrong{border-color:#e45d78;background:#ffe6ec}
+  .feedback{margin-top:16px;padding:14px 16px;border-radius:15px;font-weight:800;line-height:1.45}
+  .feedback.good{background:#ddf8ec;color:#116a49}.feedback.try{background:#ffe8ed;color:#9b2943}
+  .nav{display:flex;justify-content:flex-end;margin-top:18px}
+  .result-icon{font-size:60px;text-align:center}
+  .result-title{text-align:center;font-size:clamp(1.8rem,6vw,2.5rem);color:var(--purple);margin:6px 0}
+  .score{font-size:clamp(2.5rem,10vw,4rem);font-weight:1000;text-align:center;color:#18a875;margin:8px 0}
+  .result-note{text-align:center;line-height:1.5}
+  .result-details{background:#f7f4ff;border-radius:18px;padding:15px;margin:18px 0;line-height:1.8}
+  .whatsapp{background:#20bf68;color:white;box-shadow:0 5px 0 #118b48;display:flex;align-items:center;justify-content:center;gap:9px;text-decoration:none;text-align:center;padding:15px;border-radius:15px;font-weight:900;min-height:54px}
+  .secondary{background:#fff0b8;color:#5a4300}
+  .tiny{font-size:.82rem;color:#766f8c;line-height:1.5;margin-top:14px;text-align:center}
+  footer{text-align:center;font-size:.83rem;color:#766f8c;margin:18px 0 8px}
+  @media(max-width:520px){body{padding:12px}.fields,.options{grid-template-columns:1fr}.card{border-radius:22px}.logo{width:64px;height:64px}.topline{font-size:.9rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo" aria-hidden="true">✏️</div>
+    <h1>Punctuation Power!</h1>
+    <p class="subtitle">Ready to become a punctuation superstar? Read each sentence and choose the best answer!</p>
+    <div class="chips" aria-label="Quiz topics">
+      <span class="chip">🔠 Capital letters</span><span class="chip">🔵 Full stops</span>
+      <span class="chip">❓ Question marks</span><span class="chip">🍉 Commas</span>
+    </div>
+  </header>
+
+  <main>
+    <section id="start" class="card">
+      <h2 style="margin-top:0">🌈 Let's get started!</h2>
+      <p>First, tell your teacher who you are.</p>
+      <div class="fields">
+        <div><label for="pupilName">Your name</label><input id="pupilName" maxlength="60" autocomplete="name" placeholder="e.g. Aiman" required></div>
+        <div><label for="pupilClass">Your class</label><input id="pupilClass" maxlength="40" placeholder="e.g. 5 Amanah" required></div>
+      </div>
+      <button id="startBtn" class="primary full">Start the quiz! 🚀</button>
+      <p class="tiny">10 questions • Multiple choice • Instant feedback</p>
+    </section>
+
+    <section id="quiz" class="card hidden" aria-live="polite">
+      <div class="topline"><span id="questionCount">QUESTION 1 OF 10</span><span id="scorePill" class="pill">⭐ 0 points</span></div>
+      <div class="progress" aria-label="Quiz progress"><span id="progressBar"></span></div>
+      <div id="qLabel" class="q-label">Choose the best answer</div>
+      <h2 id="questionText" class="question"></h2>
+      <div id="sentence" class="sentence"></div>
+      <div id="options" class="options"></div>
+      <div id="feedback" class="feedback hidden" role="status"></div>
+      <div class="nav"><button id="nextBtn" class="primary hidden">Next question ➜</button></div>
+    </section>
+
+    <section id="results" class="card hidden">
+      <div class="result-icon" id="resultIcon">🏆</div>
+      <h2 class="result-title" id="resultTitle">Amazing work!</h2>
+      <div class="score" id="finalScore">0/10</div>
+      <p class="result-note" id="resultMessage"></p>
+      <div class="result-details" id="resultDetails"></div>
+      <a id="whatsappBtn" class="whatsapp" href="#" target="_blank" rel="noopener">💬 Send Results to Teacher</a>
+      <p class="tiny">WhatsApp will open with your results ready to send. Please tap <b>Send</b> in WhatsApp to notify your teacher.</p>
+      <button id="retryBtn" class="secondary full" style="margin-top:12px">🔄 Play again</button>
+    </section>
+  </main>
+  <footer>Made for curious learners • Keep practising and keep shining! ✨</footer>
+</div>
+
+<script>
+/*
+  SETUP BEFORE PUBLISHING:
+  Replace 60123456789 below with the teacher's WhatsApp number.
+  Use country code and digits only; for Malaysia, use 60 and remove the leading 0.
+*/
+const TEACHER_WHATSAPP = "60178128974"; // <-- REPLACE with teacher's number
+
+const questions = [
+  {topic:"Capital letters", prompt:"Which sentence is written correctly?", sentence:"my friend ali likes football.", options:["my friend ali likes football.","My friend Ali likes football.","My Friend ali likes football.","My friend Ali Likes football."], answer:1, explain:"Start a sentence with a capital letter. Names, such as Ali, also begin with capital letters."},
+  {topic:"Question marks", prompt:"Which punctuation mark belongs at the end?", sentence:"Where is your pencil □", options:["Full stop (.)","Comma (,)","Question mark (?)","Capital letter (A)"], answer:2, explain:"Use a question mark (?) at the end of a direct question."},
+  {topic:"Full stops", prompt:"Choose the best ending for this sentence.", sentence:"The cat is sleeping□", options:["?","!",".",","], answer:2, explain:"A statement usually ends with a full stop (.)."},
+  {topic:"Commas", prompt:"Which sentence uses commas correctly?", sentence:"I packed apples bananas and grapes.", options:["I packed apples bananas, and grapes.","I packed, apples bananas and grapes.","I packed apples, bananas and grapes.","I, packed apples bananas and grapes."], answer:2, explain:"Use commas to separate items in a list: apples, bananas and grapes."},
+  {topic:"Capital letters", prompt:"Which word needs a capital letter?", sentence:"We visited sabah during the holiday.", options:["visited","during","holiday","sabah"], answer:3, explain:"The name of a place, such as Sabah, begins with a capital letter."},
+  {topic:"Question marks", prompt:"Choose the correctly punctuated question.", sentence:"□", options:["What time is it.","What time is it?","What time is it,","what time is it?"], answer:1, explain:"A question begins with a capital letter and ends with a question mark."},
+  {topic:"Full stops", prompt:"Which sentence has a full stop in the right place?", sentence:"□", options:["I like to read. books","I. like to read books","I like to read books.","I like. to read books"], answer:2, explain:"Put a full stop at the end of the complete statement, not in the middle."},
+  {topic:"Commas", prompt:"Which punctuation mark is correct?", sentence:"On Saturday□ we played badminton.", options:["(.)","(,)","Capital letter","(?)"], answer:1, explain:"A comma can be used to separate an introductory time phrase from the rest of the sentence."},
+  {topic:"Capital letters", prompt:"Choose the sentence with correct capital letters.", sentence:"□", options:["my birthday is in june.","My birthday is in June.","My Birthday is in june.","my Birthday is in June."], answer:1, explain:"Begin the sentence with a capital letter. Months such as June also begin with a capital letter."},
+  {topic:"Mixed punctuation", prompt:"Choose the correctly written sentence.", sentence:"□", options:["Can you help me.","can you help me?","Can you help me?","Can, you help me?"], answer:2, explain:"Start the question with a capital letter and end it with a question mark."}
+];
+
+let current = 0, score = 0, answered = false, pupil = "", pupilClass = "", responses = [];
+const $ = id => document.getElementById(id);
+$("startBtn").addEventListener("click", () => {
+  pupil = $("pupilName").value.trim();
+  pupilClass = $("pupilClass").value.trim();
+  if (!pupil || !pupilClass) {
+    alert("Please enter your name and class first. 😊");
+    return;
+  }
+  current = 0; score = 0; responses = [];
+  $("start").classList.add("hidden");
+  $("results").classList.add("hidden");
+  $("quiz").classList.remove("hidden");
+  renderQuestion();
+});
+function renderQuestion(){
+  answered = false;
+  const q = questions[current];
+  $("questionCount").textContent = `QUESTION ${current+1} OF ${questions.length}`;
+  $("scorePill").textContent = `⭐ ${score} point${score===1?"":"s"}`;
+  $("progressBar").style.width = `${(current/questions.length)*100}%`;
+  $("qLabel").textContent = q.topic;
+  $("questionText").textContent = q.prompt;
+  $("sentence").textContent = q.sentence === "□" ? "Pick the sentence below!" : q.sentence;
+  $("sentence").classList.toggle("hidden", q.sentence === "□");
+  $("options").innerHTML = "";
+  $("feedback").className = "feedback hidden";
+  $("nextBtn").classList.add("hidden");
+  q.options.forEach((option, i) => {
+    const btn = document.createElement("button");
+    btn.className = "option";
+    btn.innerHTML = `<span class="letter">${String.fromCharCode(65+i)}</span><span></span>`;
+    btn.querySelector("span:last-child").textContent = option;
+    btn.addEventListener("click", () => chooseAnswer(i, btn));
+    $("options").appendChild(btn);
+  });
+}
+function chooseAnswer(index, chosenButton){
+  if(answered) return;
+  answered = true;
+  const q = questions[current];
+  const correct = index === q.answer;
+  if(correct) score++;
+  responses.push({topic:q.topic, question:q.prompt, chosen:q.options[index], correct, answer:q.options[q.answer]});
+  [...$("options").children].forEach((btn, i) => {
+    btn.disabled = true;
+    if(i === q.answer) btn.classList.add("correct");
+    if(i === index && !correct) btn.classList.add("wrong");
+  });
+  $("scorePill").textContent = `⭐ ${score} point${score===1?"":"s"}`;
+  $("feedback").textContent = `${correct ? "🎉 Great job! " : "💡 Good try! "}${q.explain}`;
+  $("feedback").className = `feedback ${correct ? "good" : "try"}`;
+  $("nextBtn").textContent = current === questions.length-1 ? "See my results 🏆" : "Next question ➜";
+  $("nextBtn").classList.remove("hidden");
+  $("progressBar").style.width = `${((current+1)/questions.length)*100}%`;
+}
+$("nextBtn").addEventListener("click", () => {
+  if(current < questions.length-1){ current++; renderQuestion(); }
+  else showResults();
+});
+function showResults(){
+  $("quiz").classList.add("hidden");
+  $("results").classList.remove("hidden");
+  const percent = Math.round(score/questions.length*100);
+  $("finalScore").textContent = `${score}/${questions.length} (${percent}%)`;
+  $("resultIcon").textContent = percent >= 80 ? "🏆" : percent >= 50 ? "🌟" : "💪";
+  $("resultTitle").textContent = percent >= 80 ? "Punctuation Superstar!" : percent >= 50 ? "Great effort!" : "Keep practising!";
+  $("resultMessage").textContent = percent >= 80 ? "Fantastic work! You are becoming a punctuation expert!" : percent >= 50 ? "You're learning more each time. Keep going!" : "Every expert starts as a learner. Try again and see your score grow!";
+  const topicScores = {};
+  questions.forEach((q,i) => {
+    if(!topicScores[q.topic]) topicScores[q.topic] = {total:0,correct:0};
+    topicScores[q.topic].total++;
+    if(responses[i] && responses[i].correct) topicScores[q.topic].correct++;
+  });
+  $("resultDetails").innerHTML = `<b>👤 Pupil:</b> ${escapeHtml(pupil)}<br><b>🏫 Class:</b> ${escapeHtml(pupilClass)}<br><b>📚 Quiz:</b> Punctuation Power!<br><b>📅 Completed:</b> ${new Date().toLocaleString()}<br><br><b>Topic practice:</b><br>` +
+    Object.entries(topicScores).map(([topic,data]) => `${escapeHtml(topic)}: ${data.correct}/${data.total}`).join("<br>");
+  const message = [
+    "🎮 Punctuation Power! Quiz Results",
+    `Pupil: ${pupil}`,
+    `Class: ${pupilClass}`,
+    `Score: ${score}/${questions.length} (${percent}%)`,
+    `Completed: ${new Date().toLocaleString()}`,
+    "",
+    "Topic results:",
+    ...Object.entries(topicScores).map(([topic,data]) => `${topic}: ${data.correct}/${data.total}`)
+  ].join("\n");
+  const validNumber = /^\d{8,15}$/.test(TEACHER_WHATSAPP) && TEACHER_WHATSAPP !== "60123456789";
+  $("whatsappBtn").href = `https://wa.me/${TEACHER_WHATSAPP}?text=${encodeURIComponent(message)}`;
+  $("whatsappBtn").setAttribute("aria-label","Open WhatsApp to send quiz results to the teacher");
+  if(!validNumber){
+    $("whatsappBtn").href = "#";
+    $("whatsappBtn").onclick = e => {
+      e.preventDefault();
+      alert("Before publishing, replace the example teacher number in the HTML file with your WhatsApp number (country code + number, digits only).");
+    };
+  } else {
+    $("whatsappBtn").onclick = null;
+  }
+}
+function escapeHtml(value){
+  return String(value).replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+}
+$("retryBtn").addEventListener("click", () => {
+  $("results").classList.add("hidden");
+  $("start").classList.remove("hidden");
+});
+</script>
+</body>
+</html>
